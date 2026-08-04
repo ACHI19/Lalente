@@ -164,7 +164,7 @@ function initForm(formId, hintId) {
   if (!form || !hint) return;
 
   form.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e
     const input = form.querySelector('input[type="email"]');
     const value = input.value;
 
