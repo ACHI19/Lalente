@@ -158,36 +158,7 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-function initForm(formId, hintId) {
-  const form = document.getElementById(formId);
-  const hint = document.getElementById(hintId);
-  if (!form || !hint) return;
 
-  form.addEventListener('submit', (e) => {
-    e
-    const input = form.querySelector('input[type="email"]');
-    const value = input.value;
-
-    if (!isValidEmail(value)) {
-      input.classList.add('input-error');
-      hint.textContent = 'Inserisci un indirizzo email valido.';
-      hint.className = 'form-hint error';
-      input.focus();
-      return;
-    }
-
-    input.classList.remove('input-error');
-    hint.textContent = `Fatto! Controlla la casella ${value} per iniziare.`;
-    hint.className = 'form-hint success';
-    form.reset();
-  });
-
-  form.querySelector('input[type="email"]')?.addEventListener('input', () => {
-    form.querySelector('input').classList.remove('input-error');
-    hint.textContent = '';
-    hint.className = 'form-hint';
-  });
-}
 
 /* ============================================
    FAQ ACCORDION
