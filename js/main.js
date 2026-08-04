@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileNav();
   initRevealAnimations();
   initTestimonialSlider();
-  initForm('heroForm', 'heroFormHint');
-  initForm('ctaForm', 'ctaFormHint');
+  //initForm('heroForm', 'heroFormHint');
+  //initForm('ctaForm', 'ctaFormHint');
   initFaqAccordion();
   initBackToTop();
 });
