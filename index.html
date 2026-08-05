@@ -1,510 +1,107 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovaFlow — Funnel di marketing, semplificati</title>
-<meta name="description" content="NovaFlow ti dà tutti gli strumenti per attrarre, convertire e far crescere i tuoi clienti online, senza bisogno di un team tecnico.">
-<meta name="theme-color" content="#0B0E17">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaFlow — Crea Landing Page e Raccogli Lead</title>
+  <meta name="theme-color" content="#0B0E17">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Collegamento Firebase (Database Lead) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    body { background-color: #0B0E17; color: #ffffff; font-family: sans-serif; }
+    .btn-grad { background: linear-gradient(135deg, #7C5CFC, #22D3EE); }
+    .text-grad { background: linear-gradient(135deg, #7C5CFC, #22D3EE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between">
 
-<a class="skip-link" href="#main">Vai al contenuto principale</a>
-
-<!-- ===== HEADER ===== -->
-<header class="site-header" id="header">
-  <div class="container header-inner">
-    <a href="#" class="brand" aria-label="NovaFlow, home">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <path d="M4 22 L12 6 L16 14 L24 4" stroke="url(#gradMark)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          <defs>
-            <linearGradient id="gradMark" x1="4" y1="22" x2="24" y2="4">
-              <stop offset="0" stop-color="#7C5CFC"/>
-              <stop offset="1" stop-color="#22D3EE"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </span>
-      <span class="brand-name">NovaFlow</span>
+  <!-- Header Navigazione -->
+  <header class="bg-[#111625] border-b border-slate-800 px-4 py-3 flex justify-between items-center sticky top-0 z-50">
+    <a href="index.html" class="flex items-center gap-2 font-bold text-base text-white">
+      ⚡ NovaFlow
     </a>
-
-    <nav class="main-nav" id="mainNav" aria-label="Navigazione principale">
-      <a href="#metodo">Metodo</a>
-      <a href="#funzionalita">Funzionalità</a>
-      <a href="#testimonianze">Storie di successo</a>
-      <a href="#prezzi">Prezzi</a>
-      <a href="#faq">FAQ</a>
+    <nav class="flex items-center gap-3 text-xs">
+      <a href="builder.html" class="btn-grad text-white font-bold px-3 py-1.5 rounded-lg shadow-lg">Apri Builder 🚀</a>
     </nav>
+  </header>
 
-    <div class="header-actions">
-      <a href="#login" class="btn btn-ghost">Accedi</a>
-      <a href="builder.html" class="btn btn-ghost">Accedi al Builder</a>
-  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Apri il menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-</header>
+  <!-- Contenuto Principale / Hero Section -->
+  <main class="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-2xl mx-auto my-8">
+    
+    <span class="bg-slate-800 text-cyan-400 text-xs px-3 py-1 rounded-full border border-slate-700 mb-4 font-semibold">
+      Piattaforma Open Source
+    </span>
 
-<main id="main">
+    <h1 class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">
+      Crea Landing Page ad alta conversione con <span class="text-grad">NovaFlow</span>
+    </h1>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero">
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="container hero-inner">
-      <p class="eyebrow reveal">La piattaforma tutto-in-uno per il tuo business online</p>
-      <h1 class="reveal">Sei a un <span class="text-gradient">funnel</span> di distanza dal prossimo salto di crescita</h1>
-      <p class="hero-sub reveal">Costruisci pagine, automatizza le vendite e gestisci i clienti in un unico posto. Nessun tecnico richiesto.</p>
+    <p class="text-slate-400 text-sm md:text-base mb-8 max-w-lg">
+      Usa i nostri modelli pronti, personalizza il codice e salva le email dei tuoi utenti direttamente nel CRM integrato.
+    </p>
 
-      <form class="hero-form reveal" id="heroForm" action="https://formspree.io/f/mzeppqbr>
-        <label for="heroEmail" class="visually-hidden">Indirizzo email</label>
-        <input type="email" id="heroEmail" name="email" placeholder="La tua email" required autocomplete="email">
-        <button type="submit" class="btn btn-primary" id="cta-hero">
-          Inizia ora
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </form>
-      <p class="form-hint" id="heroFormHint" role="status" aria-live="polite">Nessuna carta di credito richiesta · Annulla quando vuoi</p>
+    <!-- Form Iscrizione Home (Salva su Firebase) -->
+    <form onsubmit="saveHomeLead(event)" class="w-full max-w-md bg-[#111625] border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-2 mb-8">
+      <input type="email" id="homeEmail" placeholder="Inserisci la tua email..." required class="flex-1 bg-slate-900 text-white text-xs p-3 rounded-xl border border-slate-700 outline-none focus:border-cyan-400">
+      <button type="submit" class="btn-grad text-white font-bold text-xs px-5 py-3 rounded-xl shrink-0">Iscriviti Ora</button>
+    </form>
 
-      <div class="trustbar reveal" aria-label="Aziende che si fidano di NovaFlow">
-        <span>Trusted by growth teams at</span>
-        <ul class="trust-logos">
-          <li>Orbitwave</li>
-          <li>Kindra Labs</li>
-          <li>Fluxmark</li>
-          <li>Solenna</li>
-          <li>PeakByte</li>
-        </ul>
+    <!-- Card Funzionalità -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full text-left mt-4">
+      <div class="bg-[#111625] p-4 rounded-xl border border-slate-800/80">
+        <div class="text-cyan-400 font-bold text-base mb-1">⚡ Veloci</div>
+        <p class="text-slate-400 text-xs">Template pronti all'uso leggeri e ottimizzati per mobile.</p>
+      </div>
+      <div class="bg-[#111625] p-4 rounded-xl border border-slate-800/80">
+        <div class="text-purple-400 font-bold text-base mb-1">📬 CRM Integrato</div>
+        <p class="text-slate-400 text-xs">Tutti i contatti finiscono direttamente nel tuo database Firebase.</p>
+      </div>
+      <div class="bg-[#111625] p-4 rounded-xl border border-slate-800/80">
+        <div class="text-emerald-400 font-bold text-base mb-1">🛠️ Editor Live</div>
+        <p class="text-slate-400 text-xs">Modifica il codice e vedi l'anteprima in tempo reale.</p>
       </div>
     </div>
-  </section>
 
-  <!-- ===== TESTIMONIANZE ===== -->
-  <section class="testimonials" id="testimonianze">
-    <div class="container">
-      <h2 class="section-title reveal">Storie vere, risultati veri</h2>
-      <div class="testimonial-slider reveal" id="testimonialSlider">
-        <div class="testimonial-track" id="testimonialTrack">
+  </main>
 
-          <blockquote class="testimonial-card">
-            <p>“Da quando abbiamo strutturato il nostro primo funnel, le richieste qualificate sono triplicate in due mesi.”</p>
-            <footer><span class="avatar" style="--c1:#7C5CFC;--c2:#22D3EE">MR</span><div><strong>Marta Riva</strong><span>Fondatrice, Studio Riva</span></div></footer>
-          </blockquote>
+  <!-- Footer -->
+  <footer class="bg-[#111625] border-t border-slate-800 p-4 text-center text-slate-500 text-xs">
+    <p>NovaFlow Engine — Progetto Open Source</p>
+  </footer>
 
-          <blockquote class="testimonial-card">
-            <p>“Abbiamo lanciato una community di oltre 8.000 iscritti senza scrivere una riga di codice.”</p>
-            <footer><span class="avatar" style="--c1:#22D3EE;--c2:#7C5CFC">DL</span><div><strong>Davide Lanza</strong><span>Creator & Coach</span></div></footer>
-          </blockquote>
+  <script>
+    // Inizializzazione Firebase Firestore
+    const firebaseConfig = {
+      projectId: "appp-da322",
+      storageBucket: "appp-da322.firebasestorage.app"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-          <blockquote class="testimonial-card">
-            <p>“Il primo funnel ha generato in una settimana quello che prima facevamo in un trimestre.”</p>
-            <footer><span class="avatar" style="--c1:#7C5CFC;--c2:#F472B6">SG</span><div><strong>Sara Greco</strong><span>E-commerce Manager</span></div></footer>
-          </blockquote>
-
-          <blockquote class="testimonial-card">
-            <p>“Automazioni, checkout e community in un solo strumento: abbiamo tagliato 4 abbonamenti su 5.”</p>
-            <footer><span class="avatar" style="--c1:#F472B6;--c2:#22D3EE">LT</span><div><strong>Luca Ferri</strong><span>Founder, Ferri Digital</span></div></footer>
-          </blockquote>
-
-        </div>
-        <div class="slider-controls">
-          <button id="prevSlide" aria-label="Testimonianza precedente">‹</button>
-          <div class="slider-dots" id="sliderDots"></div>
-          <button id="nextSlide" aria-label="Testimonianza successiva">›</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== METODO / WORKFLOW ===== -->
-  <section class="workflow" id="metodo">
-    <div class="container">
-      <p class="eyebrow reveal center">Il metodo NovaFlow</p>
-      <h2 class="section-title reveal center">Dal primo contatto al cliente fedele</h2>
-
-      <div class="workflow-grid">
-
-        <article class="workflow-step reveal">
-          <div class="step-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="9" stroke="url(#g1)" stroke-width="2"/><circle cx="13" cy="13" r="3" fill="url(#g1)"/><defs><linearGradient id="g1" x1="4" y1="4" x2="22" y2="22"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg>
-          </div>
-          <h3>Attira</h3>
-          <p>Landing page, form di iscrizione, blog e sondaggi per generare contatti in target.</p>
-        </article>
-
-        <article class="workflow-step reveal">
-          <div class="step-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M5 13h16M14 6l7 7-7 7" stroke="url(#g2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g2" x1="4" y1="4" x2="22" y2="22"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg>
-          </div>
-          <h3>Converti</h3>
-          <p>Checkout ottimizzati, offerte a tempo e order bump per aumentare il tasso di conversione.</p>
-        </article>
-
-        <article class="workflow-step reveal">
-          <div class="step-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="4" y="4" width="18" height="18" rx="4" stroke="url(#g3)" stroke-width="2"/><path d="M9 13l3 3 6-6" stroke="url(#g3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g3" x1="4" y1="4" x2="22" y2="22"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg>
-          </div>
-          <h3>Vendi</h3>
-          <p>Store online, upsell one-click e gestione prodotti per moltiplicare lo scontrino medio.</p>
-        </article>
-
-        <article class="workflow-step reveal">
-          <div class="step-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4v18M4 13h18" stroke="url(#g4)" stroke-width="2" stroke-linecap="round"/><circle cx="13" cy="13" r="10" stroke="url(#g4)" stroke-width="1.4"/><defs><linearGradient id="g4" x1="4" y1="4" x2="22" y2="22"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg>
-          </div>
-          <h3>Fidelizza</h3>
-          <p>CRM, pipeline e messaggistica per coltivare la relazione con ogni singolo cliente.</p>
-        </article>
-
-        <article class="workflow-step reveal">
-          <div class="step-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M4 20l6-10 5 6 7-11" stroke="url(#g5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g5" x1="4" y1="4" x2="22" y2="22"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg>
-          </div>
-          <h3>Scala</h3>
-          <p>Corsi, community e sequenze email per trasformare i clienti in ambassador ricorrenti.</p>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== FUNZIONALITÀ ===== -->
-  <section class="features" id="funzionalita">
-    <div class="container">
-      <p class="eyebrow reveal center">Tutto incluso</p>
-      <h2 class="section-title reveal center">Un solo abbonamento, ogni strumento che ti serve</h2>
-
-      <div class="features-grid" id="featuresGrid"></div>
-    </div>
-  </section>
-
-  <!-- ===== BUILDER SPOTLIGHT ===== -->
-  <section class="builder-spotlight" id="builder">
-    <div class="container builder-grid">
-
-      <div class="builder-text reveal">
-        <p class="eyebrow">Landing Builder</p>
-        <h2 class="section-title">Costruisci pagine in pochi minuti, non in settimane</h2>
-        <p class="builder-desc">Trascina, rilascia, pubblica. Il nostro editor visuale ti dà il controllo totale senza bisogno di scrivere codice.</p>
-
-        <ol class="stepper" aria-label="Percorso cliente NovaFlow">
-          <li class="stepper-item">
-            <span class="stepper-dot" aria-hidden="true"></span>
-            <div><strong>Attira</strong><p>Porta traffico qualificato con landing page ottimizzate.</p></div>
-          </li>
-          <li class="stepper-item">
-            <span class="stepper-dot" aria-hidden="true"></span>
-            <div><strong>Converti</strong><p>Trasforma i visitatori in lead con form e offerte mirate.</p></div>
-          </li>
-          <li class="stepper-item">
-            <span class="stepper-dot" aria-hidden="true"></span>
-            <div><strong>Automatizza</strong><p>Lascia che i workflow seguano ogni contatto al posto tuo.</p></div>
-          </li>
-          <li class="stepper-item">
-            <span class="stepper-dot" aria-hidden="true"></span>
-            <div><strong>Vendi</strong><p>Checkout integrato per chiudere la vendita senza attriti.</p></div>
-          </li>
-          <li class="stepper-item">
-            <span class="stepper-dot" aria-hidden="true"></span>
-            <div><strong>Scala</strong><p>Replica ciò che funziona su nuovi pubblici e mercati.</p></div>
-          </li>
-        </ol>
-      </div>
-
-      <div class="builder-visual reveal">
-        <div class="mockup-card" aria-hidden="true">
-          <div class="mockup-toolbar"><span></span><span></span><span></span></div>
-          <div class="mockup-body">
-            <div class="mockup-block mockup-block--wide"></div>
-            <div class="mockup-block"></div>
-            <div class="mockup-block"></div>
-            <div class="mockup-block mockup-block--accent"></div>
-          </div>
-        </div>
-        <div class="floating-badge">
-          <div class="stars" aria-hidden="true">★★★★★</div>
-          <strong class="floating-stat">+420% <span>Conversioni</span></strong>
-          <div class="floating-person">
-            <span class="avatar" style="--c1:#7C5CFC;--c2:#22D3EE">MR</span>
-            <div><strong>Marta Rossi</strong><span>CEO, Orbitwave</span></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ===== SHOWCASE: VIDEO + CASE STUDY ===== -->
-  <section class="showcase">
-    <div class="container showcase-grid">
-
-      <button class="video-card reveal" type="button" aria-label="Guarda NovaFlow in azione (demo video)">
-        <div class="video-thumb" aria-hidden="true">
-          <span class="play-button">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 4l10 6-10 6V4Z" fill="currentColor"/></svg>
-          </span>
-        </div>
-        <span class="video-label">Guarda NovaFlow in azione</span>
-      </button>
-
-      <article class="case-study-card reveal">
-        <p class="eyebrow">Caso studio</p>
-        <h3>Come Luca ha generato <span class="text-gradient">€187.000</span> in 90 giorni</h3>
-        <ul class="checklist">
-          <li>Landing</li><li>CRM</li><li>Email</li><li>Checkout</li>
-          <li>Calendar</li><li>Automation</li><li>Membership</li><li>Affiliate</li><li>Analytics</li>
-        </ul>
-        <a href="#" class="btn btn-ghost">Leggi il caso studio</a>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- ===== PREZZI ===== -->
-  <section class="pricing" id="prezzi">
-    <div class="container">
-      <p class="eyebrow reveal center">Prezzi</p>
-      <h2 class="section-title reveal center">Un piano per ogni fase del tuo business</h2>
-
-      <div class="pricing-grid">
-
-        <article class="price-card reveal">
-          <h3>Starter</h3>
-          <p class="price"><span>29€</span>/mese</p>
-          <p class="price-desc">Per chi lancia il primo funnel.</p>
-          <ul class="price-features">
-            <li>1 sito e 3 funnel</li>
-            <li>Landing Builder</li>
-            <li>Email marketing base</li>
-          </ul>
-          <a href="#cta-hero" class="btn btn-ghost">Inizia ora</a>
-        </article>
-
-        <article class="price-card price-card--featured reveal">
-          <span class="badge-featured">⭐ Più scelto</span>
-          <h3>Pro</h3>
-          <p class="price"><span>79€</span>/mese</p>
-          <p class="price-desc">Per chi vuole automatizzare e scalare.</p>
-          <ul class="price-features">
-            <li>Funnel illimitati</li>
-            <li>CRM e Automazioni</li>
-            <li>Checkout e Membership</li>
-            <li>Analytics avanzate</li>
-          </ul>
-          <a href="#cta-hero" class="btn btn-primary">Inizia ora</a>
-        </article>
-
-        <article class="price-card reveal">
-          <h3>Business</h3>
-          <p class="price"><span>199€</span>/mese</p>
-          <p class="price-desc">Per team e volumi elevati.</p>
-          <ul class="price-features">
-            <li>Tutto di Pro</li>
-            <li>Multi-utente e ruoli</li>
-            <li>Affiliate Center</li>
-            <li>Supporto prioritario</li>
-          </ul>
-          <a href="#cta-hero" class="btn btn-ghost">Inizia ora</a>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== FAQ ===== -->
-  <section class="faq" id="faq">
-    <div class="container faq-inner">
-      <p class="eyebrow reveal center">Domande frequenti</p>
-      <h2 class="section-title reveal center">Tutto quello che c'è da sapere</h2>
-
-      <div class="faq-list reveal">
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            <span>Serve la carta di credito per iniziare?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer"><p>No, la prova gratuita di 14 giorni non richiede alcuna carta di credito.</p></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            <span>Posso cancellare in qualsiasi momento?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer"><p>Sì, puoi annullare l'abbonamento in qualunque momento direttamente dal pannello, senza penali.</p></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            <span>Ci sono template pronti all'uso?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer"><p>Sì, trovi decine di template professionali per landing page, checkout ed email, pronti da personalizzare.</p></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            <span>Che tipo di supporto è incluso?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer"><p>Assistenza via chat ed email su tutti i piani; supporto prioritario incluso nel piano Business.</p></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            <span>Posso importare i miei dati esistenti?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer"><p>Sì, puoi importare contatti e prodotti da CSV o dalle integrazioni disponibili in pochi click.</p></div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== CTA FINALE ===== -->
-  <section class="cta-final">
-    <div class="hero-glow hero-glow--alt" aria-hidden="true"></div>
-    <div class="container cta-final-inner reveal">
-      <h2>Pronto a costruire<br>il tuo business?</h2>
-      <form class="hero-form" id="ctaForm" novalidate>
-        <label for="ctaEmail" class="visually-hidden">Indirizzo email</label>
-        <input type="email" id="ctaEmail" name="email" placeholder="La tua email" required autocomplete="email">
-        <button type="submit" class="btn btn-primary">Inizia Gratis</button>
-      </form>
-      <p class="form-hint" id="ctaFormHint" role="status" aria-live="polite"></p>
-      <ul class="cta-badges">
-        <li>14 giorni di prova</li>
-        <li>Nessuna carta richiesta</li>
-        <li>Annulla quando vuoi</li>
-      </ul>
-    </div>
-  </section>
-
-</main>
-
-<!-- ===== FOOTER ===== -->
-<footer class="site-footer" id="footer">
-  <div class="container footer-grid">
-
-    <div class="footer-brand">
-      <a href="#" class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><path d="M4 22 L12 6 L16 14 L24 4" stroke="url(#gradMarkFooter)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="gradMarkFooter" x1="4" y1="22" x2="24" y2="4"><stop offset="0" stop-color="#7C5CFC"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg>
-        </span>
-        <span class="brand-name">NovaFlow</span>
-      </a>
-      <p>La piattaforma per costruire funnel di marketing che convertono davvero.</p>
-    </div>
-
-    <div class="footer-col">
-      <h4>Prodotto</h4>
-      <ul>
-        <li><a href="#funzionalita">Pagine di atterraggio</a></li>
-        <li><a href="#funzionalita">Store online</a></li>
-        <li><a href="#funzionalita">Email marketing</a></li>
-        <li><a href="#funzionalita">Automazioni</a></li>
-        <li><a href="#prezzi">Prezzi</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Risorse</h4>
-      <ul>
-        <li><a href="#">Template</a></li>
-        <li><a href="#">Academy</a></li>
-        <li><a href="#">Developers</a></li>
-        <li><a href="#">Blog</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Community</h4>
-      <ul>
-        <li><a href="#testimonianze">Storie di successo</a></li>
-        <li><a href="#">Community</a></li>
-        <li><a href="#">Programma affiliati</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Supporto</h4>
-      <ul>
-        <li><a href="#login">Accedi</a></li>
-        <li><a href="#">Centro assistenza</a></li>
-        <li><a href="#">Stato del servizio</a></li>
-        <li><a href="#">Privacy</a></li>
-        <li><a href="#">Termini</a></li>
-      </ul>
-    </div>
-
-  </div>
-  <div class="container footer-bottom">
-    <p>© 2026 NovaFlow. Tutti i diritti riservati.</p>
-  </div>
-</footer>
-
-<button class="back-to-top" id="backToTop" aria-label="Torna in cima">↑</button>
-
-<script src="js/main.js"></script>
-  <!-- Integration Firebase per Novaflow -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  // Le tue configurazioni Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyD1KbtY3CPzwpQkxClAqf0K5RqsXd8ZHiE",
-    authDomain: "appp-da322.firebaseapp.com",
-    projectId: "appp-da322",
-    storageBucket: "appp-da322.firebasestorage.app",
-    messagingSenderId: "749110158150",
-    appId: "1:749110158150:web:79079739c6eab37d10fb47",
-    measurementId: "G-9J7N559QY3"
-  };
-
-  // Inizializza Firebase e Database Firestore
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Gestione invio modulo
-  const heroForm = document.getElementById('heroForm');
-  const heroFormHint = document.getElementById('heroFormHint');
-
-  if (heroForm) {
-    heroForm.addEventListener('submit', async (e) => {
+    // Salva l'email inviata dalla Home Page
+    function saveHomeLead(e) {
       e.preventDefault();
-      const emailInput = heroForm.querySelector('input[type="email"]');
-      const email = emailInput.value;
+      const email = document.getElementById('homeEmail').value;
 
-      try {
-        // Salva l'email nella collezione 'leads' su Firestore
-        await addDoc(collection(db, "leads"), {
-          email: email,
-          createdAt: new Date()
-        });
-
-        if (heroFormHint) {
-          heroFormHint.textContent = "Email salvata con successo su Firebase!";
-          heroFormHint.style.color = "#4ade80";
-        }
-        heroForm.reset();
-      } catch (error) {
-        console.error("Errore Firebase:", error);
-        if (heroFormHint) {
-          heroFormHint.textContent = "Errore durante il salvataggio: " + error.message;
-          heroFormHint.style.color = "#f87171";
-        }
-      }
-    });
-  }
-</script>
-
+      db.collection("leads").add({
+        email: email,
+        source: "Home_Page",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        alert("Grazie per l'iscrizione! Email salvata con successo.");
+        document.getElementById('homeEmail').value = '';
+      })
+      .catch((error) => {
+        alert("Errore durante il salvataggio: " + error.message);
+      });
+    }
+  </script>
 </body>
 </html>
