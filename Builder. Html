@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaFunnel - Visual Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-slate-900 border-r border-slate-800 p-4 flex flex-col justify-between">
+    <div>
+      <div className="flex items-center gap-2 mb-6 font-bold text-lg text-white">
+        <span class="bg-blue-600 text-white px-2 py-1 rounded-lg">N</span> NovaFunnel
+      </div>
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Componenti</div>
+      <div class="space-y-2">
+        <button onclick="addElement('heading')" class="w-full flex items-center gap-2 p-3 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 text-sm font-medium transition-all">
+          <i data-lucide="type" class="w-4 h-4 text-blue-500"></i> Titolo
+        </button>
+        <button onclick="addElement('paragraph')" class="w-full flex items-center gap-2 p-3 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 text-sm font-medium transition-all">
+          <i data-lucide="square" class="w-4 h-4 text-blue-500"></i> Testo
+        </button>
+        <button onclick="addElement('button')" class="w-full flex items-center gap-2 p-3 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 text-sm font-medium transition-all">
+          <i data-lucide="send" class="w-4 h-4 text-blue-500"></i> Pulsante CTA
+        </button>
+      </div>
+    </div>
+    <a href="index.html" class="flex items-center gap-2 text-slate-400 text-sm hover:text-white">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i> Torna al Sito
+    </a>
+  </aside>
+
+  <!-- Area Editing (Canvas) -->
+  <main class="flex-1 p-8 overflow-y-auto flex flex-col items-center">
+    <div class="w-full max-w-3xl flex justify-between items-center mb-4">
+      <h1 class="text-xl font-bold text-white">Editor Pagina</h1>
+      <button onclick="exportPage()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-medium">
+        <i data-lucide="download" class="w-4 h-4"></i> Esporta HTML
+      </button>
+    </div>
+    <div id="canvas" class="w-full max-w-3xl min-h-[600px] bg-slate-900 border-2 border-dashed border-slate-800 rounded-2xl p-6 space-y-4">
+      <p id="placeholder" class="text-slate-500 text-center py-20">Clicca sui componenti a sinistra per aggiungerli alla pagina.</p>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    let elements = [];
+
+    function addElement(type) {
+      document.getElementById('placeholder')?.remove();
+      const id = 'el-' + Date.now();
+      const newEl = { id, type, content: type === 'heading' ? 'Nuovo Titolo' : type === 'button' ? 'Clicca Qui' : 'Testo di esempio...' };
+      elements.push(newEl);
+      render();
+    }
+
+    function removeElement(id) {
+      elements = elements.filter(el => el.id !== id);
+      render();
+    }
+
+    function render() {
+      const canvas = document.getElementById('canvas');
+      canvas.innerHTML = elements.length === 0 ? '<p id="placeholder" class="text-slate-500 text-center py-20">Clicca sui componenti a sinistra per aggiungerli alla pagina.</p>' : '';
+      
+      elements.forEach(el => {
+        const div = document.createElement('div');
+        div.className = "group relative p-3 border border-slate-800 rounded-xl hover:border-blue-500 flex justify-between items-center bg-slate-900/50";
+        
+        let contentHtml = '';
+        if (el.type === 'heading') contentHtml = `<h2 class="text-2xl font-bold text-white">${el.content}</h2>`;
+        else if (el.type === 'paragraph') contentHtml = `<p class="text-slate-300">${el.content}</p>`;
+        else if (el.type === 'button') contentHtml = `<button class="bg-blue-600 text-white px-6 py-2 rounded-xl font-medium">${el.content}</button>`;
+
+        div.innerHTML = `
+          <div>${contentHtml}</div>
+          <button onclick="removeElement('${el.id}')" class="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        `;
+        canvas.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    function exportPage() {
+      let htmlContent = elements.map(el => {
+        if (el.type === 'heading') return `<h1>${el.content}</h1>`;
+        if (el.type === 'paragraph') return `<p>${el.content}</p>`;
+        if (el.type === 'button') return `<a href="#" style="background:#2563eb;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;">${el.content}</a>`;
+      }).join('\n');
+
+      const blob = new Blob([`<!DOCTYPE html><html><body style="background:#0f172a;color:#fff;font-family:sans-serif;padding:40px;">${htmlContent}</body></html>`], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'pagina.html';
+      a.click();
+    }
+  </script>
+</body>
+</html>
