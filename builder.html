@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NovaFlow — Template & Code Builder</title>
+  <title>NovaFlow — Builder & CRM Integration</title>
   <meta name="theme-color" content="#0B0E17">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Firebase SDK -->
+  <!-- Collegamento Firebase (Database Lead) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -19,30 +20,31 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- Header -->
-  <header class="bg-[#111625] p-3 border-b border-slate-800 flex justify-between items-center">
-    <a href="index.html" class="font-bold text-white flex items-center gap-1 text-sm">
+  <!-- Header Navigazione Unificato -->
+  <header class="bg-[#111625] border-b border-slate-800 px-4 py-3 flex justify-between items-center sticky top-0 z-50">
+    <a href="index.html" class="flex items-center gap-2 font-bold text-base text-white">
       ⚡ NovaFlow <span class="text-xs text-slate-400 font-normal">Builder</span>
     </a>
-    <div class="flex gap-2">
-      <button onclick="copyCode()" class="bg-slate-800 text-xs px-3 py-1.5 rounded-lg text-white font-medium">Copia Code</button>
-      <button onclick="downloadCode()" class="btn-grad text-xs px-3 py-1.5 rounded-lg text-white font-bold">Scarica</button>
-    </div>
+    <nav class="flex items-center gap-3 text-xs">
+      <a href="index.html" class="text-slate-300 hover:text-white font-medium">Home</a>
+      <button onclick="copyCode()" class="bg-slate-800 text-white px-2.5 py-1.5 rounded-lg">Copia</button>
+      <button onclick="downloadCode()" class="btn-grad text-white font-bold px-3 py-1.5 rounded-lg">Scarica</button>
+    </nav>
   </header>
 
-  <!-- Menu Modelli Pronti (Template) -->
+  <!-- Menu Selettore Template -->
   <div class="bg-[#161b2e] p-2 border-b border-slate-800 flex gap-2 overflow-x-auto text-xs">
-    <span class="text-slate-400 py-1 font-semibold shrink-0">Scegli Modello:</span>
-    <button onclick="loadTemplate('lead')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md shrink-0 text-cyan-300">📩 Raccogli Email</button>
+    <span class="text-slate-400 py-1 font-semibold shrink-0">Template:</span>
+    <button onclick="loadTemplate('lead')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md shrink-0 text-cyan-300">📩 Cattura Email</button>
     <button onclick="loadTemplate('vsl')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md shrink-0 text-purple-300">🎥 Pagina Video</button>
     <button onclick="loadTemplate('book')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md shrink-0 text-emerald-300">📅 Appuntamento</button>
   </div>
 
-  <!-- Main WorkSpace -->
+  <!-- Area di Lavoro: Editor + Anteprima -->
   <main class="flex-1 flex flex-col lg:flex-row">
-    <!-- Editor Codice -->
+    <!-- Editor Codice Nativo -->
     <div class="flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-slate-800">
-      <textarea id="codeEditor" spellcheck="false" class="w-full h-64 lg:h-full bg-[#0B0E17] text-slate-300 font-mono text-xs p-3 outline-none resize-none" placeholder="Scrivi o modifica il codice qui..."></textarea>
+      <textarea id="codeEditor" spellcheck="false" class="w-full h-64 lg:h-full bg-[#0B0E17] text-slate-300 font-mono text-xs p-3 outline-none resize-none" placeholder="Scrivi codice HTML qui..."></textarea>
     </div>
 
     <!-- Anteprima Live -->
@@ -52,7 +54,7 @@
   </main>
 
   <script>
-    // Configurazione Firebase
+    // Inizializzazione Firebase Firestore
     const firebaseConfig = {
       projectId: "appp-da322",
       storageBucket: "appp-da322.firebasestorage.app"
@@ -60,14 +62,14 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Modelli HTML Pronti
+    // Template HTML Integrati
     const templates = {
       lead: `<!DOCTYPE html>
 <html>
 <head><script src="https://cdn.tailwindcss.com"><\/script></head>
 <body class="bg-slate-900 text-white p-6 flex flex-col items-center justify-center min-h-screen text-center">
   <h1 class="text-2xl font-bold mb-2">Scarica la Guida Gratuita</h1>
-  <p class="text-slate-400 text-sm mb-4">Inserisci la tua email per sbloccare il contenuto subito.</p>
+  <p class="text-slate-400 text-sm mb-4">Inserisci la tua email per accedere subito ai contenuti.</p>
   <form onsubmit="saveLead(event)" class="flex flex-col gap-2 w-full max-w-xs">
     <input type="email" id="emailInput" placeholder="La tua email..." required class="p-2 rounded bg-slate-800 text-sm border border-slate-700 outline-none">
     <button type="submit" class="bg-indigo-600 font-bold p-2 rounded text-sm hover:bg-indigo-500">Ottieni Accesso</button>
@@ -87,11 +89,11 @@
 <html>
 <head><script src="https://cdn.tailwindcss.com"><\/script></head>
 <body class="bg-slate-950 text-white p-6 flex flex-col items-center text-center">
-  <h1 class="text-2xl font-bold mb-4 text-cyan-400">Guarda il Video Esclusivo</h1>
+  <h1 class="text-2xl font-bold mb-4 text-cyan-400">Guarda il Video Presentazione</h1>
   <div class="w-full max-w-md aspect-video bg-slate-800 rounded-xl mb-4 flex items-center justify-center text-slate-500">
-    ▶ Video Player (YouTube / Vimeo)
+    ▶ Video Player
   </div>
-  <button class="bg-emerald-500 font-bold px-6 py-3 rounded-xl text-sm shadow-lg">Acquista Ora a 19€</button>
+  <button class="bg-emerald-500 font-bold px-6 py-3 rounded-xl text-sm shadow-lg">Acquista Ora</button>
 </body>
 </html>`,
 
@@ -99,10 +101,10 @@
 <html>
 <head><script src="https://cdn.tailwindcss.com"><\/script></head>
 <body class="bg-slate-900 text-white p-6 flex flex-col items-center text-center">
-  <h1 class="text-xl font-bold mb-2">Prenota una Consulenza 1-a-1</h1>
-  <p class="text-slate-400 text-xs mb-4">Scegli il giorno e l'ora che preferisci dal calendario.</p>
+  <h1 class="text-xl font-bold mb-2">Prenota una Chiamata</h1>
+  <p class="text-slate-400 text-xs mb-4">Scegli la data dal calendario integrato.</p>
   <div class="p-4 bg-slate-800 border border-slate-700 rounded-xl text-slate-300 text-xs">
-    📅 Calendario di Prenotazione Attivo
+    📅 Calendario Appuntamenti
   </div>
 </body>
 </html>`
@@ -125,23 +127,23 @@
     }
 
     editor.addEventListener('input', updatePreview);
-    
-    // Ascolta i messaggi dall'iframe per salvare i contatti su Firebase
+
+    // Riceve le email inviate dalla landing page e le salva su Firebase
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'NEW_LEAD') {
         db.collection("leads").add({
           email: event.data.email,
+          source: "Builder_Template",
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       }
     });
 
-    // Avvio iniziale con il modello Lead
     window.onload = () => loadTemplate('lead');
 
     function copyCode() {
       navigator.clipboard.writeText(editor.value);
-      alert("Codice copiato!");
+      alert("Codice copiato negli appunti!");
     }
 
     function downloadCode() {
@@ -154,3 +156,4 @@
   </script>
 </body>
 </html>
+ 
