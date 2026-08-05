@@ -152,13 +152,62 @@ function initTestimonialSlider() {
 }
 
 /* ============================================
-   FORM: validazione email reale (client-side)
+   FORM: invio e validazione email (Formspree)
    ============================================ */
 function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
+function initForm(formId, hintId) {
+  const form = document.getElementById(formId);
+  const hint = document.getElementById(hintId);
+  if (!form) return;
 
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = form.querySelector('input[type="email"]');
+    const value = input ? input.value : '';
+
+    if (!isValidEmail(value)) {
+      if (input) input.classList.add('input-error');
+      if (hint) {
+        hint.textContent = 'Inserisci un indirizzo email valido.';
+        hint.className = 'form-hint error';
+      }
+      return;
+    }
+
+    try {
+      const response = await fetch('https://formspree.io/f/mzeppqbr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ email: value })
+      });
+
+      if (response.ok) {
+        if (input) input.classList.remove('input-error');
+        if (hint) {
+          hint.textContent = 'Fatto! Email inviata con successo.';
+          hint.className = 'form-hint success';
+        }
+        form.reset();
+      } else {
+        if (hint) {
+          hint.textContent = 'Si è verificato un errore durante l invio.';
+          hint.className = 'form-hint error';
+        }
+      }
+    } catch (err) {
+      if (hint) {
+        hint.textContent = 'Errore di connessione. Riprova più tardi.';
+        hint.className = 'form-hint error';
+      }
+    }
+  });
+}
 
 /* ============================================
    FAQ ACCORDION
@@ -174,7 +223,6 @@ function initFaqAccordion() {
     question.addEventListener('click', () => {
       const isOpen = question.getAttribute('aria-expanded') === 'true';
 
-      // Chiude le altre voci aperte (comportamento accordion)
       items.forEach(other => {
         if (other !== item) {
           other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
@@ -212,8 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileNav();
   initRevealAnimations();
   initTestimonialSlider();
-  //initForm('heroForm', 'heroFormHint');
-  //initForm('ctaForm', 'ctaFormHint');
+  initForm('heroForm', 'heroFormHint');
+  initForm('ctaForm', 'ctaFormHint');
   initFaqAccordion();
   initBackToTop();
 });
