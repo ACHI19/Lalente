@@ -3,190 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NovaFlow — Visual Funnel Builder</title>
+  <title>NovaFlow — Template & Code Builder</title>
   <meta name="theme-color" content="#0B0E17">
-  
-  <!-- Font ufficiali NovaFlow -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0B0E17;
-      color: #F3F4F6;
-    }
-    h1, h2, h3, .font-heading {
-      font-family: 'Space Grotesk', sans-serif;
-    }
-    .text-gradient {
-      background: linear-gradient(135deg, #7C5CFC 0%, #22D3EE 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .btn-gradient {
-      background: linear-gradient(135deg, #7C5CFC 0%, #22D3EE 100%);
-      transition: opacity 0.2s ease;
-    }
-    .btn-gradient:hover {
-      opacity: 0.9;
-    }
+    body { background-color: #0B0E17; color: #ffffff; font-family: sans-serif; }
+    .btn-grad { background: linear-gradient(135deg, #7C5CFC, #22D3EE); }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#0B0E17]">
+<body class="min-h-screen flex flex-col">
 
-  <!-- Header Software NovaFlow -->
-  <header class="bg-[#111625] border-b border-slate-800/80 px-4 py-3 flex justify-between items-center sticky top-0 z-50">
-    <a href="index.html" class="flex items-center gap-2 font-bold text-lg">
-      <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-        <path d="M4 22 L12 6 L16 14 L24 4" stroke="url(#gradMark)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        <defs>
-          <linearGradient id="gradMark" x1="4" y1="22" x2="24" y2="4">
-            <stop offset="0" stop-color="#7C5CFC"/>
-            <stop offset="1" stop-color="#22D3EE"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <span class="font-heading text-white tracking-wide">NovaFlow <span class="text-xs font-normal text-slate-400 font-sans ml-1">Builder</span></span>
+  <!-- Header -->
+  <header class="bg-[#111625] p-3 border-b border-slate-800 flex justify-between items-center">
+    <a href="index.html" class="font-bold text-white flex items-center gap-1 text-sm">
+      ⚡ NovaFlow <span class="text-xs text-slate-400 font-normal">Builder</span>
     </a>
-    
-    <div class="flex items-center gap-3">
-      <button onclick="exportPage()" class="btn-gradient text-white px-4 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-[#7C5CFC]/20">
-        <i data-lucide="download" class="w-3.5 h-3.5"></i> Esporta
-      </button>
-      <a href="index.html" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
-        <i data-lucide="x" class="w-4 h-4"></i>
-      </a>
+    <div class="flex gap-2">
+      <button onclick="copyCode()" class="bg-slate-800 text-xs px-3 py-1.5 rounded-lg text-white font-medium">Copia Code</button>
+      <button onclick="downloadCode()" class="btn-grad text-xs px-3 py-1.5 rounded-lg text-white font-bold">Scarica</button>
     </div>
   </header>
 
-  <!-- Toolbar Componenti Scorrevole -->
-  <div class="bg-[#111625]/90 backdrop-blur-md border-b border-slate-800/80 p-3 overflow-x-auto flex gap-2 sticky top-[53px] z-40">
-    <button onclick="addElement('heading')" class="shrink-0 flex items-center gap-2 px-3 py-2 bg-slate-900 border border-slate-700/60 rounded-xl text-xs font-medium hover:border-[#7C5CFC] active:scale-95 transition-all text-slate-200">
-      <i data-lucide="type" class="w-4 h-4 text-[#22D3EE]"></i> + Titolo
-    </button>
-    <button onclick="addElement('paragraph')" class="shrink-0 flex items-center gap-2 px-3 py-2 bg-slate-900 border border-slate-700/60 rounded-xl text-xs font-medium hover:border-[#7C5CFC] active:scale-95 transition-all text-slate-200">
-      <i data-lucide="align-left" class="w-4 h-4 text-[#22D3EE]"></i> + Testo
-    </button>
-    <button onclick="addElement('button')" class="shrink-0 flex items-center gap-2 px-3 py-2 bg-slate-900 border border-slate-700/60 rounded-xl text-xs font-medium hover:border-[#7C5CFC] active:scale-95 transition-all text-slate-200">
-      <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-[#7C5CFC]"></i> + Pulsante CTA
-    </button>
-    <button onclick="addElement('form')" class="shrink-0 flex items-center gap-2 px-3 py-2 bg-slate-900 border border-slate-700/60 rounded-xl text-xs font-medium hover:border-[#7C5CFC] active:scale-95 transition-all text-slate-200">
-      <i data-lucide="mail" class="w-4 h-4 text-[#7C5CFC]"></i> + Form Email
-    </button>
+  <!-- Menu Modelli Pronti (Template) -->
+  <div class="bg-[#161b2e] p-2 border-b border-slate-800 flex gap-2 overflow-x-auto text-xs">
+    <span class="text-slate-400 py-1 font-semibold shrink-0">Scegli Modello:</span>
+    <button onclick="loadTemplate('lead')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md shrink-0 text-cyan-300">📩 Raccogli Email</button>
+    <button onclick="loadTemplate('vsl')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md shrink-0 text-purple-300">🎥 Pagina Video</button>
+    <button onclick="loadTemplate('book')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md shrink-0 text-emerald-300">📅 Appuntamento</button>
   </div>
 
-  <!-- Area Editing (Canvas NovaFlow) -->
-  <main class="flex-1 p-4 flex flex-col items-center">
-    <div id="canvas" class="w-full max-w-3xl min-h-[550px] bg-[#111625] border-2 border-dashed border-slate-800 rounded-2xl p-4 md:p-6 space-y-4">
-      <div id="placeholder" class="text-center py-20 space-y-2">
-        <i data-lucide="layers" class="w-8 h-8 mx-auto text-slate-600"></i>
-        <p class="text-slate-400 text-sm font-medium">Crea la tua Landing Page NovaFlow</p>
-        <p class="text-slate-600 text-xs">Tocca i componenti in alto per aggiungerli alla struttura.</p>
-      </div>
+  <!-- Main WorkSpace -->
+  <main class="flex-1 flex flex-col lg:flex-row">
+    <!-- Editor Codice -->
+    <div class="flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-slate-800">
+      <textarea id="codeEditor" spellcheck="false" class="w-full h-64 lg:h-full bg-[#0B0E17] text-slate-300 font-mono text-xs p-3 outline-none resize-none" placeholder="Scrivi o modifica il codice qui..."></textarea>
+    </div>
+
+    <!-- Anteprima Live -->
+    <div class="flex-1 bg-slate-950 flex flex-col">
+      <iframe id="previewFrame" class="w-full h-full bg-white border-none min-h-[350px]"></iframe>
     </div>
   </main>
 
   <script>
-    lucide.createIcons();
-    let elements = [];
+    // Configurazione Firebase
+    const firebaseConfig = {
+      projectId: "appp-da322",
+      storageBucket: "appp-da322.firebasestorage.app"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    function addElement(type) {
-      document.getElementById('placeholder')?.remove();
-      const id = 'el-' + Date.now();
-      let content = '';
-      
-      if (type === 'heading') content = 'Sei a un funnel di distanza';
-      else if (type === 'paragraph') content = 'Costruisci pagine, automatizza le vendite e gestisci i clienti in un unico posto.';
-      else if (type === 'button') content = 'Inizia la prova gratuita';
-      else if (type === 'form') content = 'Iscriviti alla newsletter';
-
-      elements.push({ id, type, content });
-      render();
+    // Modelli HTML Pronti
+    const templates = {
+      lead: `<!DOCTYPE html>
+<html>
+<head><script src="https://cdn.tailwindcss.com"><\/script></head>
+<body class="bg-slate-900 text-white p-6 flex flex-col items-center justify-center min-h-screen text-center">
+  <h1 class="text-2xl font-bold mb-2">Scarica la Guida Gratuita</h1>
+  <p class="text-slate-400 text-sm mb-4">Inserisci la tua email per sbloccare il contenuto subito.</p>
+  <form onsubmit="saveLead(event)" class="flex flex-col gap-2 w-full max-w-xs">
+    <input type="email" id="emailInput" placeholder="La tua email..." required class="p-2 rounded bg-slate-800 text-sm border border-slate-700 outline-none">
+    <button type="submit" class="bg-indigo-600 font-bold p-2 rounded text-sm hover:bg-indigo-500">Ottieni Accesso</button>
+  </form>
+  <script>
+    function saveLead(e) {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      window.parent.postMessage({ type: 'NEW_LEAD', email: email }, '*');
+      alert('Iscrizione completata con successo!');
     }
-
-    function removeElement(id) {
-      elements = elements.filter(el => el.id !== id);
-      render();
-    }
-
-    function render() {
-      const canvas = document.getElementById('canvas');
-      if (elements.length === 0) {
-        canvas.innerHTML = `
-          <div id="placeholder" class="text-center py-20 space-y-2">
-            <i data-lucide="layers" class="w-8 h-8 mx-auto text-slate-600"></i>
-            <p class="text-slate-400 text-sm font-medium">Crea la tua Landing Page NovaFlow</p>
-            <p class="text-slate-600 text-xs">Tocca i componenti in alto per aggiungerli alla struttura.</p>
-          </div>`;
-        lucide.createIcons();
-        return;
-      }
-
-      canvas.innerHTML = '';
-      elements.forEach(el => {
-        const div = document.createElement('div');
-        div.className = "relative p-4 border border-slate-800/80 rounded-xl flex justify-between items-center bg-[#0B0E17]/60 gap-3 group";
-        
-        let contentHtml = '';
-        if (el.type === 'heading') {
-          contentHtml = `<h2 class="font-heading text-xl md:text-2xl font-bold text-white break-words">${el.content}</h2>`;
-        } else if (el.type === 'paragraph') {
-          contentHtml = `<p class="text-slate-300 text-sm leading-relaxed break-words">${el.content}</p>`;
-        } else if (el.type === 'button') {
-          contentHtml = `<button class="btn-gradient text-white px-5 py-2.5 rounded-xl text-sm font-semibold">${el.content}</button>`;
-        } else if (el.type === 'form') {
-          contentHtml = `
-            <div class="flex flex-col sm:flex-row gap-2 w-full max-w-md">
-              <input type="email" placeholder="La tua email" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none w-full" readonly>
-              <button class="btn-gradient text-white px-4 py-2 rounded-xl text-sm font-semibold shrink-0">Inizia Ora</button>
-            </div>`;
-        }
-
-        div.innerHTML = `
-          <div class="flex-1 overflow-hidden">${contentHtml}</div>
-          <button onclick="removeElement('${el.id}')" class="text-slate-500 hover:text-red-400 p-1.5 shrink-0 transition-colors">
-            <i data-lucide="trash-2" class="w-4 h-4"></i>
-          </button>
-        `;
-        canvas.appendChild(div);
-      });
-      lucide.createIcons();
-    }
-
-    function exportPage() {
-      if (elements.length === 0) {
-        alert("Aggiungi almeno un componente prima di esportare.");
-        return;
-      }
-
-      let htmlContent = elements.map(el => {
-        if (el.type === 'heading') return `<h1 style="font-family:'Space Grotesk',sans-serif; color:#ffffff; font-size: 28px; font-weight:700;">${el.content}</h1>`;
-        if (el.type === 'paragraph') return `<p style="color:#94A3B8; font-size:16px; line-height:1.6;">${el.content}</p>`;
-        if (el.type === 'button') return `<a href="#" style="background:linear-gradient(135deg,#7C5CFC,#22D3EE); color:#ffffff; padding:12px 24px; border-radius:12px; font-weight:600; text-decoration:none; display:inline-block;">${el.content}</a>`;
-        if (el.type === 'form') return `<form style="display:flex; gap:8px;"><input type="email" placeholder="Email" style="padding:10px; border-radius:8px; border:1px solid #334155; background:#0F172A; color:#fff;"><button style="background:#7C5CFC; color:#fff; padding:10px 16px; border-radius:8px; border:none;">Invia</button></form>`;
-      }).join('\n  ');
-
-      const fullCode = `<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <title>Landing Page - NovaFlow</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body style="background-color:#0B0E17; color:#F3F4F6; font-family:'Inter',sans-serif; padding:40px; display:flex; flex-direction:column; gap:20px; max-width:600px; margin:0 auto;">
-  ${htmlContent}
+  <\/script>
 </body>
-</html>`;
+</html>`,
 
-      const blob = new Blob([fullCode], { type: 'text/html' });
+      vsl: `<!DOCTYPE html>
+<html>
+<head><script src="https://cdn.tailwindcss.com"><\/script></head>
+<body class="bg-slate-950 text-white p-6 flex flex-col items-center text-center">
+  <h1 class="text-2xl font-bold mb-4 text-cyan-400">Guarda il Video Esclusivo</h1>
+  <div class="w-full max-w-md aspect-video bg-slate-800 rounded-xl mb-4 flex items-center justify-center text-slate-500">
+    ▶ Video Player (YouTube / Vimeo)
+  </div>
+  <button class="bg-emerald-500 font-bold px-6 py-3 rounded-xl text-sm shadow-lg">Acquista Ora a 19€</button>
+</body>
+</html>`,
+
+      book: `<!DOCTYPE html>
+<html>
+<head><script src="https://cdn.tailwindcss.com"><\/script></head>
+<body class="bg-slate-900 text-white p-6 flex flex-col items-center text-center">
+  <h1 class="text-xl font-bold mb-2">Prenota una Consulenza 1-a-1</h1>
+  <p class="text-slate-400 text-xs mb-4">Scegli il giorno e l'ora che preferisci dal calendario.</p>
+  <div class="p-4 bg-slate-800 border border-slate-700 rounded-xl text-slate-300 text-xs">
+    📅 Calendario di Prenotazione Attivo
+  </div>
+</body>
+</html>`
+    };
+
+    const editor = document.getElementById('codeEditor');
+    const preview = document.getElementById('previewFrame');
+
+    function loadTemplate(key) {
+      editor.value = templates[key];
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const code = editor.value;
+      const iframeDoc = preview.contentDocument || preview.contentWindow.document;
+      iframeDoc.open();
+      iframeDoc.write(code);
+      iframeDoc.close();
+    }
+
+    editor.addEventListener('input', updatePreview);
+    
+    // Ascolta i messaggi dall'iframe per salvare i contatti su Firebase
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'NEW_LEAD') {
+        db.collection("leads").add({
+          email: event.data.email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    });
+
+    // Avvio iniziale con il modello Lead
+    window.onload = () => loadTemplate('lead');
+
+    function copyCode() {
+      navigator.clipboard.writeText(editor.value);
+      alert("Codice copiato!");
+    }
+
+    function downloadCode() {
+      const blob = new Blob([editor.value], { type: 'text/html' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'novaflow-landing.html';
+      a.download = 'landing-page.html';
       a.click();
     }
   </script>
