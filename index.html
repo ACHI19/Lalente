@@ -453,5 +453,58 @@
 <button class="back-to-top" id="backToTop" aria-label="Torna in cima">↑</button>
 
 <script src="js/main.js"></script>
+  <!-- Integration Firebase per Novaflow -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // Le tue configurazioni Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyD1KbtY3CPzwpQkxClAqf0K5RqsXd8ZHiE",
+    authDomain: "appp-da322.firebaseapp.com",
+    projectId: "appp-da322",
+    storageBucket: "appp-da322.firebasestorage.app",
+    messagingSenderId: "749110158150",
+    appId: "1:749110158150:web:79079739c6eab37d10fb47",
+    measurementId: "G-9J7N559QY3"
+  };
+
+  // Inizializza Firebase e Database Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Gestione invio modulo
+  const heroForm = document.getElementById('heroForm');
+  const heroFormHint = document.getElementById('heroFormHint');
+
+  if (heroForm) {
+    heroForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailInput = heroForm.querySelector('input[type="email"]');
+      const email = emailInput.value;
+
+      try {
+        // Salva l'email nella collezione 'leads' su Firestore
+        await addDoc(collection(db, "leads"), {
+          email: email,
+          createdAt: new Date()
+        });
+
+        if (heroFormHint) {
+          heroFormHint.textContent = "Email salvata con successo su Firebase!";
+          heroFormHint.style.color = "#4ade80";
+        }
+        heroForm.reset();
+      } catch (error) {
+        console.error("Errore Firebase:", error);
+        if (heroFormHint) {
+          heroFormHint.textContent = "Errore durante il salvataggio: " + error.message;
+          heroFormHint.style.color = "#f87171";
+        }
+      }
+    });
+  }
+</script>
+
 </body>
 </html>
